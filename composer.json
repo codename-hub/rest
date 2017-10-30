@@ -1,0 +1,19 @@
+{
+    "name": "codename/rest",
+    "description": "This library supplies the core parts for constructing an API-only endpoint-calling-style app",
+    "version": "0.0.1",
+    "type": "project",
+    "keywords": ["api", "codename", "core", "framework", "rest" "endpoint"],
+    "time": "2017-10-30",
+    "authors": [
+        {
+            "name": "Kevin Dargel",
+            "role": "Software Developer"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+          "codename\\rest\\": "backend/class/"
+      }
+    }
+}
