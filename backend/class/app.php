@@ -15,8 +15,7 @@ class app extends \codename\core\app {
   public function __CONSTRUCT()
   {
     // force json response
-    $classname = "\\codename\\core\\response\\" . 'json';
-    self::$instances['response'] = new $classname();
+    self::$instances['response'] = new \codename\rest\response\json();
 
     // self-inject
     self::injectApp(array(
@@ -60,7 +59,17 @@ class app extends \codename\core\app {
   {
     // ?
     header('Content-Type: application/json');
-    print_r(json_encode(app::getResponse()->getData()));
+
+    $response = array(
+      'success' => app::getResponse()->getSuccess(),
+      'data' => app::getResponse()->getData()
+    );
+
+    if(count($errors = app::getResponse()->getErrors()) > 0) {
+      $response['errors'] = $errors;
+    }
+
+    print_r(json_encode($response));
   }
 
   /**
