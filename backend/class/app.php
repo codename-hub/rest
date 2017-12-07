@@ -58,7 +58,7 @@ class app extends \codename\core\app {
   protected function doOutput()
   {
     // ?
-    header('Content-Type: application/json');
+    app::getResponse()->setHeader('Content-Type: application/json');
 
     $response = array(
       'success' => app::getResponse()->getSuccess(),

@@ -107,7 +107,7 @@ class json extends \codename\core\response {
   public function pushOutput()
   {
     // Set correct header
-    header('Content-Type: application/json');
+    $this->setHeader('Content-Type: application/json');
 
     $response = array(
       'success' => $this->getSuccess(),
