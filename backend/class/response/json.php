@@ -6,7 +6,7 @@ use codename\core\errorstack;
  * I handle all the data for a JSON response
  * @package core
  */
-class json extends \codename\core\response {
+class json extends \codename\core\response\json {
 
   /**
    * success state
