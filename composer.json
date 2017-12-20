@@ -11,6 +11,10 @@
             "role": "Software Developer"
         }
     ],
+    "require" : {
+      "codename/core" : "*",
+      "codename/core-ui" : "*"
+    },
     "autoload": {
       "psr-4": {
           "codename\\rest\\": "backend/class/"
