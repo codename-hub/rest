@@ -14,6 +14,9 @@ class app extends \codename\core\app {
    */
   public function __CONSTRUCT()
   {
+    // this app class requires mod_rewrite and correct rewriting settings
+    \codename\core\ui\app::setUrlGenerator(new \codename\core\generator\restUrlGenerator());
+
     // force json response
     self::$instances['response'] = new \codename\rest\response\json();
 
