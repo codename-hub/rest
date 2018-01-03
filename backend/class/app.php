@@ -20,6 +20,9 @@ class app extends \codename\core\app {
     // force json response
     self::$instances['response'] = new \codename\rest\response\json();
 
+    // force json request
+    self::$instances['request'] = new \codename\rest\request\json();
+
     // self-inject
     self::injectApp(array(
       'vendor' => 'codename',

@@ -13,12 +13,12 @@ class json extends \codename\core\request {
      */
     public function __CONSTRUCT()
     {
-      $this->datacontainer = new \jocoon\joBase\datacontainer(array());
-      $this->addData($_GET);
-      $this->addData($_POST);
+      $this->datacontainer = new \codename\core\datacontainer(array());
+      $this->addData($_GET ?? []);
+      $this->addData($_POST ?? []);
       $body = file_get_contents('php://input');
       $data = json_decode($body, true);
-      $this->addData($data);
+      $this->addData($data ?? []);
       $this->setData('lang', "de_DE");
       return $this;
     }
