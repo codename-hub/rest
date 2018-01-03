@@ -59,6 +59,15 @@ class json extends \codename\core\response\json {
   }
 
   /**
+   * [reset description]
+   * @return \codename\core\response [description]
+   */
+  public function reset(): \codename\core\response {
+    $this->data = [];
+    return $this;
+  }
+
+  /**
    * @inheritDoc
    */
   public function displayException(\Exception $e)
