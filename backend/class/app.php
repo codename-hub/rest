@@ -44,8 +44,18 @@ class app extends \codename\core\app {
 
     // run normally
     parent::run();
+  }
 
-    // print_r($this->getRequest()->getData());
+  /**
+   * @inheritDoc
+   */
+  protected function mainRun()
+  {
+    // HTTP API Endpoint-specific method running
+
+    $this->doMethod();
+
+    parent::mainRun();
   }
 
   /**
@@ -55,6 +65,33 @@ class app extends \codename\core\app {
   {
     return $this;
   }
+
+  /**
+   * performs HTTP-Method based routines
+   * @return \codename\core\app [description]
+   */
+  protected function doMethod(): \codename\core\app
+  {
+
+    if($this->getContext() instanceof \codename\rest\context\restContextInterface) {
+      $httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
+
+      $method = "method_{$httpMethod}";
+
+      if (!method_exists($this->getContext(), $method)) {
+          throw new \codename\core\exception(self::EXCEPTION_DOMETHOD_REQUESTEDMETHODFUNCTIONNOTFOUND, \codename\core\exception::$ERRORLEVEL_ERROR, $method);
+      }
+
+      $this->getContext()->$method();
+    }
+    return $this;
+  }
+
+  /**
+   * [EXCEPTION_DOMETHOD_REQUESTEDMETHODFUNCTIONNOTFOUND description]
+   * @var string
+   */
+  const EXCEPTION_DOMETHOD_REQUESTEDMETHODFUNCTIONNOTFOUND = 'EXCEPTION_DOMETHOD_REQUESTEDMETHODFUNCTIONNOTFOUND';
 
   /**
    * @inheritDoc
