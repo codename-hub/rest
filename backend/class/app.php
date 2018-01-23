@@ -14,24 +14,24 @@ class app extends \codename\core\app {
    */
   public function __CONSTRUCT()
   {
-    // this app class requires mod_rewrite and correct rewriting settings
-    \codename\core\ui\app::setUrlGenerator(new \codename\core\generator\restUrlGenerator());
+    if(self::isRestClient()) {
+      // this app class requires mod_rewrite and correct rewriting settings
+      \codename\core\ui\app::setUrlGenerator(new \codename\core\generator\restUrlGenerator());
 
-    // force json response
-    self::$instances['response'] = new \codename\rest\response\json();
+      // force json response
+      self::$instances['response'] = new \codename\rest\response\json();
 
-    // force json request
-    self::$instances['request'] = new \codename\rest\request\json();
+      // force json request
+      self::$instances['request'] = new \codename\rest\request\json();
 
-    // self-inject
-    self::injectApp(array(
-      'vendor' => 'codename',
-      'app' => 'rest',
-      'namespace' => '\\codename\\rest'
-    ));
-
-    $value = parent::__CONSTRUCT();
-    return $value;
+      // self-inject
+      self::injectApp(array(
+        'vendor' => 'codename',
+        'app' => 'rest',
+        'namespace' => '\\codename\\rest'
+      ));
+    }
+    parent::__CONSTRUCT();
   }
 
   /**
@@ -39,9 +39,10 @@ class app extends \codename\core\app {
    */
   public function run()
   {
-    $qualifier = self::getEndpointQualifier();
-    $this->getRequest()->addData($qualifier);
-
+    if(self::isRestClient()) {
+      $qualifier = self::getEndpointQualifier();
+      $this->getRequest()->addData($qualifier);
+    }
     // run normally
     parent::run();
   }
@@ -52,9 +53,9 @@ class app extends \codename\core\app {
   protected function mainRun()
   {
     // HTTP API Endpoint-specific method running
-
-    $this->doMethod();
-
+    if(self::isRestClient()) {
+      $this->doMethod();
+    }
     parent::mainRun();
   }
 
@@ -63,7 +64,13 @@ class app extends \codename\core\app {
    */
   protected function doShow(): \codename\core\app
   {
-    return $this;
+    if(self::isRestClient()) {
+      // rest client output does NOT provide "show"
+      return $this;
+    } else {
+      // Fallback to default output (no rest client)
+      return parent::doShow();
+    }
   }
 
   /**
@@ -72,7 +79,6 @@ class app extends \codename\core\app {
    */
   protected function doMethod(): \codename\core\app
   {
-
     if($this->getContext() instanceof \codename\rest\context\restContextInterface) {
       $httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
 
@@ -94,12 +100,26 @@ class app extends \codename\core\app {
   const EXCEPTION_DOMETHOD_REQUESTEDMETHODFUNCTIONNOTFOUND = 'EXCEPTION_DOMETHOD_REQUESTEDMETHODFUNCTIONNOTFOUND';
 
   /**
+   * returns true, if client is requesting via REST protocol (e.g. no HTML output)
+   * @return bool [description]
+   */
+  protected static function isRestClient() : bool {
+    return !(strpos($_SERVER['HTTP_ACCEPT'],'text/html') !== false);
+  }
+
+  /**
    * @inheritDoc
    * overridden output method
    * omit templating engines and stuff.
    */
   protected function doOutput()
   {
+    // Fallback to default output, if client is not a REST client
+    if(!self::isRestClient()) {
+      parent::doOutput();
+      return;
+    }
+
     // ?
     app::getResponse()->setHeader('Content-Type: application/json');
 
