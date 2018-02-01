@@ -132,7 +132,19 @@ class app extends \codename\core\app {
       $response['errors'] = $errors;
     }
 
-    print_r(json_encode($response));
+    $json = json_encode($response);
+
+    if(json_last_error() !== JSON_ERROR_NONE) {
+      $errorResponse = [
+        'success' => 0,
+        'errors' => [
+          json_last_error_msg()
+        ]
+      ];
+      $json = json_encode($errorResponse);
+    }
+
+    print_r($json);
   }
 
   /**
