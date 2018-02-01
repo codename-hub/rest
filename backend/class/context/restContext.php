@@ -16,7 +16,9 @@ abstract class restContext extends context implements restContextInterface
   {
     // reset response data
     // this is a data-only context
-    $this->getResponse()->reset();
+    if($this->getResponse() instanceof \codename\rest\response\json) {
+      $this->getResponse()->reset();
+    }
   }
 
   /**
