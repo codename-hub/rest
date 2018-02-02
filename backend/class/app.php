@@ -52,11 +52,12 @@ class app extends \codename\core\app {
    */
   protected function mainRun()
   {
+    $this->doAction()->doView();
     // HTTP API Endpoint-specific method running
     if(self::isRestClient()) {
       $this->doMethod();
     }
-    parent::mainRun();
+    $this->doShow()->doOutput();
   }
 
   /**
