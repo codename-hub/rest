@@ -31,6 +31,7 @@ class app extends \codename\core\app {
         'namespace' => '\\codename\\rest'
       ));
     }
+
     parent::__CONSTRUCT();
   }
 
@@ -39,10 +40,10 @@ class app extends \codename\core\app {
    */
   public function run()
   {
-    if(self::isRestClient()) {
-      $qualifier = self::getEndpointQualifier();
-      $this->getRequest()->addData($qualifier);
-    }
+    // if(self::isRestClient()) {
+    $qualifier = self::getEndpointQualifier();
+    $this->getRequest()->addData($qualifier);
+    // }
     // run normally
     parent::run();
   }
