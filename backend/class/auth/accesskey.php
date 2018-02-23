@@ -8,7 +8,7 @@ use codename\core\exception;
  * @package core
  * @since 2016-02-01
  */
-class accesskey extends \codename\core\auth {
+abstract class accesskey extends \codename\core\auth {
 
   /**
    * exception thrown, if a wrong type was passed to authenticate()
@@ -46,4 +46,6 @@ class accesskey extends \codename\core\auth {
   {
     throw new \LogicException('Not implemented'); // TODO
   }
+
+
 }

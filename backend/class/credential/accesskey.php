@@ -1,9 +1,6 @@
 <?php
 namespace codename\rest\credential;
 
-use codename\core\app;
-use codename\core\exception;
-
 /**
  * accesskey credential
  *
@@ -18,7 +15,7 @@ class accesskey extends \codename\core\credential implements \codename\core\cred
    * validator name to be used for validating input data
    * @var string|null
    */
-  protected $validatorName = 'structure_credential_accesskey';
+  protected static $validatorName = 'structure_credential_accesskey';
 
   /**
    * @inheritDoc
