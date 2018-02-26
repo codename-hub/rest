@@ -12,7 +12,8 @@ class accesstoken extends \codename\core\validator\structure {
    */
   public $arrKeys = [
     'accesskey',
-    'token'
+    'token',
+    'valid_until'
   ];
 
 }

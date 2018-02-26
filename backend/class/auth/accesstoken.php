@@ -34,6 +34,17 @@ class accesstoken extends \codename\core\auth {
   /**
    * @inheritDoc
    */
+  public function makeHash(\codename\core\credential $credential): string
+  {
+    if(!$credential instanceof \codename\rest\credential\accesstoken) {
+      throw new exception(self::EXCEPTION_REST_AUTH_MAKEHASH_CREDENTIAL_INVALID, exception::$ERRORLEVEL_ERROR);
+    }
+    return $credential->getAuthentication(); // password_hash($credential->getAuthentication(), PASSWORD_BCRYPT);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function createCredential(array $parameters): \codename\core\credential
   {
     return new \codename\rest\credential\accesstoken($parameters);

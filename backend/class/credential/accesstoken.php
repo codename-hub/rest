@@ -9,7 +9,7 @@ namespace codename\rest\credential;
  * @package core
  * @since 2018-02-22
  */
-class accesstoken extends \codename\core\credential implements \codename\core\credential\credentialInterface {
+class accesstoken extends \codename\core\credential implements \codename\core\credential\credentialInterface, \codename\core\credential\credentialExpiryInterface {
 
   /**
    * validator name to be used for validating input data
@@ -31,6 +31,14 @@ class accesstoken extends \codename\core\credential implements \codename\core\cr
   public function getAuthentication()
   {
     return $this->get('token');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getExpiry()
+  {
+    return $this->get('valid_until');
   }
 
 }
