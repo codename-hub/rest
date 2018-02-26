@@ -150,32 +150,74 @@ abstract class rest extends \codename\core\api\rest {
      * Mapper for the request function.
      * <br />This method will concatenate the URL and return the (void) result of doRequest($url).
      * @param string $url
+     * @param string $method
+     * @param array  $params
      * @return mixed
      */
-    public function request(string $url) {
-        return $this->doRequest($this->serviceprovider->getUrl() . $url);
+    public function request(string $url, string $method = 'GET', array $params = []) {
+        return $this->doRequest($this->serviceprovider->getUrl() . $url, $method, $params);
     }
 
+    /**
+     * [get description]
+     * @param  string $uri    [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
     public function get(string $uri, array $params = []) {
-        return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'GET', $params);
+        return $this->request($uri, 'GET', $params);
+        // return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'GET', $params);
     }
 
+    /**
+     * [put description]
+     * @param  string $uri    [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
     public function put(string $uri, array $params = []) {
-      return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'PUT', $params);
+      return $this->request($uri, 'PUT', $params);
+      // return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'PUT', $params);
     }
 
+    /**
+     * [post description]
+     * @param  string $uri    [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
     public function post(string $uri, array $params = []) {
-      return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'POST', $params);
+      return $this->request($uri, 'POST', $params);
+      // return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'POST', $params);
     }
 
+    /**
+     * [patch description]
+     * @param  string $uri    [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
     public function patch(string $uri, array $params = []) {
+      return $this->request($uri, 'PATCH', $params);
       return $this->doRequest($this->serviceprovider->getUrl() . $uri, 'PATCH', $params);
     }
 
+    /**
+     * [delete description]
+     * @param  string $uri    [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
     public function delete(string $uri, array $params = []) {
 
     }
 
+    /**
+     * [options description]
+     * @param  string $uri    [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
     public function options(string $uri, array $params = []) {
 
     }
@@ -271,11 +313,25 @@ abstract class rest extends \codename\core\api\rest {
      */
     protected function prepareRequest(string $url, string $method, array $params = [])
     {
-      parent::prepareRequest($url, $method);
-      curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, $this->getAuthenticationHeaders());
+      parent::prepareRequest($url, $method, $params);
+
+      // convert key => value array to
+      // key: value  string elements
+      $authenticationHeaders = [];
+      foreach($this->getAuthenticationHeaders() as $key => $value) {
+        $authenticationHeaders[] = "{$key}: {$value}";
+      }
+
+      curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, $authenticationHeaders);
     }
 
-
+    /**
+     * @inheritDoc
+     */
+    protected function doRequest(string $url, string $method = '', array $params = []) {
+      $this->errorstack->reset();
+      return parent::doRequest($url, $method, $params);
+    }
 
     /**
      * Performs the request
@@ -354,6 +410,7 @@ abstract class rest extends \codename\core\api\rest {
         if(strlen($response) == 0) {
             $this->response = null;
             app::getLog('errormessage')->warning('CORE_BACKEND_CLASS_API_CODENAME_DECODERESPONSE::RESPONSE_EMPTY ($response = ' . $response . ')');
+            $this->errorstack->addError('', 'RESPONSE_EMPTY', $response);
             return false;
         }
 
@@ -361,17 +418,25 @@ abstract class rest extends \codename\core\api\rest {
 
         if(is_null($response)) {
             $this->response = null;
+            // response null after DESERIALIZATION (!) (e.g. invalid format)
+            $this->errorstack->addError('', 'RESPONSE_NULL', $response);
             return false;
         }
 
         if(count($errors = app::getValidator('structure_api_codename_response')->validate($response)) > 0) {
             app::getLog('errormessage')->warning('CORE_BACKEND_CLASS_API_CODENAME_DECODERESPONSE::RESPONSE_INVALID ($response = ' . json_encode($response) . ')');
+
+            // add detail data to erorstack
+            $this->errorstack->addError('', 'RESPONSE_INVALID', $response);
             return false;
         }
 
         $this->response = $response;
         if(array_key_exists('errors', $response)) {
             app::getLog('errormessage')->warning('CORE_BACKEND_CLASS_API_CODENAME_DECODERESPONSE::RESPONSE_CONTAINS_ERRORS ($response = ' . json_encode($response) . ')');
+
+            // add errors to errorstack
+            $this->errorstack->addErrors($response['errors']);
             return false;
         }
 
