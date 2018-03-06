@@ -40,10 +40,10 @@ class app extends \codename\core\app {
    */
   public function run()
   {
-    // if(self::isRestClient()) {
-    $qualifier = self::getEndpointQualifier();
-    $this->getRequest()->addData($qualifier);
-    // }
+    if(self::isRestClient()) {
+      $qualifier = self::getEndpointQualifier();
+      $this->getRequest()->addData($qualifier);
+    }
     // run normally
     parent::run();
   }
@@ -106,7 +106,7 @@ class app extends \codename\core\app {
    * @return bool [description]
    */
   protected static function isRestClient() : bool {
-    return !(strpos($_SERVER['HTTP_ACCEPT'],'text/html') !== false);
+    return (app::getRequest() instanceof \codename\core\request\cli) ? false : !(strpos($_SERVER['HTTP_ACCEPT'],'text/html') !== false);
   }
 
   /**
