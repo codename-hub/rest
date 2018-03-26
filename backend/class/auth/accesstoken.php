@@ -17,6 +17,12 @@ class accesstoken extends \codename\core\auth {
   const EXCEPTION_REST_AUTH_ACCESSTOKEN_CREDENTIAL_INVALID = 'EXCEPTION_REST_AUTH_ACCESSTOKEN_CREDENTIAL_INVALID';
 
   /**
+   * [EXCEPTION_REST_AUTH_MAKEHASH_CREDENTIAL_INVALID description]
+   * @var string
+   */
+  const EXCEPTION_REST_AUTH_MAKEHASH_CREDENTIAL_INVALID = 'EXCEPTION_REST_AUTH_MAKEHASH_CREDENTIAL_INVALID';
+
+  /**
    * @inheritDoc
    */
   public function authenticate(\codename\core\credential $credential): array
