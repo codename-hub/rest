@@ -7,7 +7,7 @@ use \codename\core\app;
  * Accesstoken-Authentication-based
  * REST Client
  */
-class accesstoken extends \codename\rest\api\rest {
+abstract class accesstoken extends \codename\rest\api\rest {
 
   /**
    * @inheritDoc
@@ -26,5 +26,7 @@ class accesstoken extends \codename\rest\api\rest {
       'X-Token'     => $this->credential->getAuthentication()
     ];
   }
+
+
 
 }
