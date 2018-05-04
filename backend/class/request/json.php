@@ -19,7 +19,7 @@ class json extends \codename\core\request {
       $body = file_get_contents('php://input');
       $data = json_decode($body, true);
       $this->addData($data ?? []);
-      $this->setData('lang', "de_DE");
+      $this->setData('lang', $this->getData('lang') ?? "de_DE");
       return $this;
     }
 }
