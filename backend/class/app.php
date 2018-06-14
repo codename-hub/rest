@@ -111,6 +111,54 @@ class app extends \codename\core\app {
 
   /**
    * @inheritDoc
+   */
+  protected function handleAccess(): bool
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        // this a REST Preflight request. Kill it.
+        self::getResponse()->pushOutput();
+        exit();
+    }
+
+    $isAllowed = $this->getContext()->isAllowed();
+    $isPublic = self::getConfig()->get("context>{$this->getRequest()->getData('context')}>view>{$this->getRequest()->getData('view')}>public") === true;
+
+    if(!$isAllowed && !$isPublic) {
+        self::getHook()->fire(\codename\core\hook::EVENT_APP_RUN_FORBIDDEN);
+
+        if(self::getAuth()->isAuthenticated()) {
+          self::getResponse()->setStatus(\codename\core\response::STATUS_FORBIDDEN);
+        } else {
+          self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+        }
+
+        self::getResponse()->pushOutput();
+        exit();
+        return false;
+    } else {
+
+      if(!$isPublic) {
+        if(!self::getAuth()->isAuthenticated()) {
+          self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+          exit();
+        }
+      }
+      self::getResponse()->setData('auth_debug', [
+        'context::isAllowed' => $isAllowed,
+        'public' => $isPublic
+      ]);
+
+      // if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+      //     // this a REST Preflight request. Kill it.
+      //     self::getResponse()->pushOutput();
+      //     exit();
+      // }
+      return true;
+    }
+  }
+
+  /**
+   * @inheritDoc
    * overridden output method
    * omit templating engines and stuff.
    */
@@ -122,31 +170,34 @@ class app extends \codename\core\app {
       return;
     }
 
+    app::getResponse()->pushOutput();
+    return;
+
     // ?
-    app::getResponse()->setHeader('Content-Type: application/json');
-
-    $response = array(
-      'success' => app::getResponse()->getSuccess(),
-      'data' => app::getResponse()->getData()
-    );
-
-    if(count($errors = app::getResponse()->getErrors()) > 0) {
-      $response['errors'] = $errors;
-    }
-
-    $json = json_encode($response);
-
-    if(json_last_error() !== JSON_ERROR_NONE) {
-      $errorResponse = [
-        'success' => 0,
-        'errors' => [
-          json_last_error_msg()
-        ]
-      ];
-      $json = json_encode($errorResponse);
-    }
-
-    print_r($json);
+    // app::getResponse()->setHeader('Content-Type: application/json');
+    //
+    // $response = array(
+    //   'success' => app::getResponse()->getSuccess(),
+    //   'data' => app::getResponse()->getData()
+    // );
+    //
+    // if(count($errors = app::getResponse()->getErrors()) > 0) {
+    //   $response['errors'] = $errors;
+    // }
+    //
+    // $json = json_encode($response);
+    //
+    // if(json_last_error() !== JSON_ERROR_NONE) {
+    //   $errorResponse = [
+    //     'success' => 0,
+    //     'errors' => [
+    //       json_last_error_msg()
+    //     ]
+    //   ];
+    //   $json = json_encode($errorResponse);
+    // }
+    //
+    // print_r($json);
   }
 
   /**
