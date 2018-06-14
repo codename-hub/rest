@@ -37,7 +37,9 @@ class json extends \codename\core\response\json {
     $translate = array(
       self::STATUS_SUCCESS => 1,
       self::STATUS_INTERNAL_ERROR => 0,
-      self::STATUS_NOTFOUND => 0
+      self::STATUS_NOTFOUND => 0,
+      self::STATUS_UNAUTHENTICATED => 0,
+      self::STATUS_FORBIDDEN => 0
     );
     return $translate[$this->status];
   }
@@ -115,6 +117,8 @@ class json extends \codename\core\response\json {
    */
   public function pushOutput()
   {
+    http_response_code($this->translateStatusToHttpStatus());
+
     // Set correct header
     $this->setHeader('Content-Type: application/json');
 
