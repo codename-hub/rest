@@ -143,10 +143,10 @@ class app extends \codename\core\app {
           exit();
         }
       }
-      self::getResponse()->setData('auth_debug', [
-        'context::isAllowed' => $isAllowed,
-        'public' => $isPublic
-      ]);
+      // self::getResponse()->setData('auth_debug', [
+      //   'context::isAllowed' => $isAllowed,
+      //   'public' => $isPublic
+      // ]);
 
       // if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
       //     // this a REST Preflight request. Kill it.
