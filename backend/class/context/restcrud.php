@@ -38,6 +38,7 @@ abstract class restcrud extends \codename\core\context implements restContextInt
 
   /**
    * implement this function and return your model
+   * @return \codename\core\model
    */
   public abstract function getModelInstance() : \codename\core\model;
 
@@ -67,7 +68,11 @@ abstract class restcrud extends \codename\core\context implements restContextInt
       $model = $this->getModelInstance();
 
       // apply filters requested
-      // $model->addFilter();
+      if($this->getRequest()->isDefined('filter')) {
+        foreach($this->getRequest()->getData('filter') as $filter) {
+          $model->addFilter($filter['field'], $filter['value'], $filter['operator'] ?? '=');
+        }
+      }
 
       $data = $model->search()->getResult();
 
