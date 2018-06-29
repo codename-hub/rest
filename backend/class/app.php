@@ -114,7 +114,7 @@ class app extends \codename\core\app {
    */
   protected function handleAccess(): bool
   {
-    if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         // this a REST Preflight request. Kill it.
         self::getResponse()->pushOutput();
         exit();
@@ -203,9 +203,12 @@ class app extends \codename\core\app {
   /**
    * Return the endpoint target of the request
    * @example $host/v1/context/view/<action>/?...
-   * @return string
+   * @return array
    */
   public static function getEndpointQualifier() : array {
+      if(!isset($_SERVER['REQUEST_URI'])) {
+        return [];
+      }
       $endpoints =  explode('/', explode('?', $_SERVER['REQUEST_URI'])[0]);
 
       // get rid of the first part of the uri (e.g. host, port, etc.)
