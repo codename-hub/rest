@@ -139,8 +139,6 @@ abstract class restcrud extends \codename\core\context implements restContextInt
    */
   public function method_delete()
   {
-    // DELETE
-    // throw new \LogicException('Not implemented'); // TODO
     if($this->getRequest()->isDefined('id')) {
       $model = $this->getModelInstance();
       $model->entryLoad($this->getRequest()->getData('id'));
