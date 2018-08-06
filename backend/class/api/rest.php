@@ -334,45 +334,6 @@ abstract class rest extends \codename\core\api\rest {
     }
 
     /**
-     * Performs the request
-     * @param string $type
-     * @return mixed|bool
-     */
-    protected function xblarp_doRequest(string $url) {
-        $this->curlHandler = curl_init();
-
-        //
-        // NOTE / TODO: make more secure
-        // do not rely on invalid HTTPS certs
-        //
-        curl_setopt($this->curlHandler, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($this->curlHandler, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($this->curlHandler, CURLOPT_URL, $url);
-        curl_setopt($this->curlHandler, CURLOPT_RETURNTRANSFER, true);
-
-        /*
-        curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, array(
-                "X-App: " . $this->authentication->getData('app_name'),
-                "X-Auth: " . $this->makeHash()
-        ));
-        */
-        curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, $this->getAuthenticationHeaders());
-
-        $this->sendData();
-        // app::getLog('codenameapi')->debug(serialize($this));
-
-        $res = $this->decodeResponse(curl_exec($this->curlHandler));
-
-        curl_close($this->curlHandler);
-
-        if(is_bool($res) && !$res) {
-            return false;
-        }
-
-        return $res;
-    }
-
-    /**
      * If data exist, this function will write the data as POST fields to the curlHandler
      * @return void
      */
@@ -435,7 +396,9 @@ abstract class rest extends \codename\core\api\rest {
         if(array_key_exists('errors', $response)) {
             app::getLog('errormessage')->warning('CORE_BACKEND_CLASS_API_CODENAME_DECODERESPONSE::RESPONSE_CONTAINS_ERRORS ($response = ' . json_encode($response) . ')');
 
-            // add errors to errorstack
+            //
+            // Push errors to errorstack
+            //
             $this->errorstack->addErrors($response['errors']);
             return false;
         }
