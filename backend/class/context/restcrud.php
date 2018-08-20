@@ -99,7 +99,11 @@ abstract class restcrud extends \codename\core\context implements restContextInt
     $model = $this->getModelInstance();
 
     $model->entryMake($this->getRequest()->getData());
-    $model->entrySave();
+    if(count($errors = $model->entryValidate()) === 0) {
+      $model->entrySave();
+    } else {
+      throw new exception('EXCEPTION_RESTCRUD_VALIDATION_ERROR', exception::$ERRORLEVEL_ERROR, $errors);
+    }
   }
 
   /**
