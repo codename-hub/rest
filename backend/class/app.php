@@ -115,9 +115,13 @@ class app extends \codename\core\app {
   protected function handleAccess(): bool
   {
     if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        // this a REST Preflight request. Kill it.
-        self::getResponse()->pushOutput();
-        exit();
+
+        if(!($this->getContext() instanceof \codename\rest\context\restContextInterface)) {
+          // this a REST Preflight request. Kill it.
+          self::getResponse()->pushOutput();
+          exit();
+        }
+
     }
 
     $isAllowed = $this->getContext()->isAllowed();
