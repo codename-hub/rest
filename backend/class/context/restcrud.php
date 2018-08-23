@@ -167,7 +167,9 @@ abstract class restcrud extends \codename\core\context implements restContextInt
   public function method_options()
   {
     // show methods available
-    throw new \LogicException('Not implemented'); // TODO
+    // throw new \LogicException('Not implemented'); // TODO
+    // we may change OPTIONS through header setting via $this->getResponse()->setHeader...
+    return;
   }
 
   /**
