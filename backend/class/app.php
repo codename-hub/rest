@@ -120,6 +120,10 @@ class app extends \codename\core\app {
           // this a REST Preflight request. Kill it.
           self::getResponse()->pushOutput();
           exit();
+        } else {
+          $this->getContext()->method_options();
+          self::getResponse()->pushOutput();
+          exit();
         }
 
     }
