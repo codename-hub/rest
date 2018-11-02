@@ -317,12 +317,13 @@ abstract class rest extends \codename\core\api\rest {
 
       // convert key => value array to
       // key: value  string elements
-      $authenticationHeaders = [];
+      // $authenticationHeaders = [];
       foreach($this->getAuthenticationHeaders() as $key => $value) {
-        $authenticationHeaders[] = "{$key}: {$value}";
+        // $authenticationHeaders[] = "{$key}: {$value}";
+        $this->setHeader($key, $value);
       }
 
-      curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, $authenticationHeaders);
+      // curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, $authenticationHeaders);
     }
 
     /**
