@@ -110,6 +110,14 @@ class app extends \codename\core\app {
   }
 
   /**
+   * handle authentication
+   * @return bool
+   */
+  protected function authenticate() : bool {
+    return app::getAuth()->isAuthenticated();
+  }
+
+  /**
    * @inheritDoc
    */
   protected function handleAccess(): bool
@@ -128,14 +136,32 @@ class app extends \codename\core\app {
 
     }
 
-    $isAllowed = $this->getContext()->isAllowed();
     $isPublic = self::getConfig()->get("context>{$this->getRequest()->getData('context')}>view>{$this->getRequest()->getData('view')}>public") === true;
+
+    $isAuthenticated = null;
+    if(!$isPublic) {
+      // perform authentication
+      if(!$this->authenticate()) {
+        // authentication_error
+        self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+        $isAuthenticated = false;
+      } else {
+        $isAuthenticated = true;
+      }
+    }
+
+    $isAllowed = $this->getContext()->isAllowed();
 
     if(!$isAllowed && !$isPublic) {
         self::getHook()->fire(\codename\core\hook::EVENT_APP_RUN_FORBIDDEN);
 
-        if(self::getAuth()->isAuthenticated()) {
+        if($isAuthenticated) {
           self::getResponse()->setStatus(\codename\core\response::STATUS_FORBIDDEN);
+          // self::getResponse()->setData('session_debug', [
+          //   'sess' => self::getSession()->getData(),
+          //   'is_allowed' => $isAllowed,
+          //   'is_public' => $isPublic
+          // ]);
         } else {
           self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
         }
@@ -146,8 +172,9 @@ class app extends \codename\core\app {
     } else {
 
       if(!$isPublic) {
-        if(!self::getAuth()->isAuthenticated()) {
+        if(!$isAuthenticated) {
           self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+          self::getResponse()->pushOutput();
           exit();
         }
       }
