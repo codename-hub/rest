@@ -133,17 +133,35 @@ class json extends \codename\core\response\json {
 
     $json = json_encode($response);
 
-    if(json_last_error() !== JSON_ERROR_NONE) {
+    if(($jsonLastError = json_last_error()) !== JSON_ERROR_NONE) {
       $errorResponse = [
         'success' => 0,
         'errors' => [
           json_last_error_msg()
         ]
       ];
+      if($jsonLastError === JSON_ERROR_UTF8) {
+        $errorResponse['erroneous_data'] = self::utf8ize($this->getData());
+      }
       $json = json_encode($errorResponse);
     }
 
     print_r($json);
   }
 
+  /**
+   * [utf8ize description]
+   * @param  [type] $mixed [description]
+   * @return [type]        [description]
+   */
+  protected static function utf8ize( $mixed ) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = self::utf8ize($value);
+        }
+    } elseif (is_string($mixed)) {
+        return mb_convert_encoding($mixed, "UTF-8", "UTF-8");
+    }
+    return $mixed;
+  }
 }
