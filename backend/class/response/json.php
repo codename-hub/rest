@@ -110,6 +110,7 @@ class json extends \codename\core\response\json {
       // show exception ?
     }
 
+    $this->pushOutput();
   }
 
   /**
