@@ -76,7 +76,9 @@ class json extends \codename\core\response\json {
   {
     $this->setStatus(self::STATUS_INTERNAL_ERROR);
 
-    if(defined('CORE_ENVIRONMENT') && CORE_ENVIRONMENT != 'production') {
+    if(defined('CORE_ENVIRONMENT')
+      // && CORE_ENVIRONMENT != 'production'
+    ) {
       /* echo $formatter->getColoredString("Hicks", 'red') . chr(10);
       echo $formatter->getColoredString("{$e->getMessage()} (Code: {$e->getCode()})", 'yellow') . chr(10) . chr(10);
 
