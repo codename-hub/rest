@@ -23,6 +23,7 @@ class json extends \codename\core\request implements \codename\core\request\file
         // add files?
         $this->files = static::normalizeFiles($_FILES)['formdata'] ?? [];
       } else {
+        $this->files = static::normalizeFiles($_FILES) ?? [];
         $this->addData($_POST ?? []);
       }
 
