@@ -16,8 +16,13 @@ class json extends \codename\core\request implements \codename\core\request\file
       $this->datacontainer = new \codename\core\datacontainer(array());
       $this->addData($_GET ?? []);
 
-      $headers = getallheaders();
-      if(isset($headers['X-Content-Type']) && $headers['X-Content-Type'] == 'application/vnd.core.form+json+formdata') {
+
+      //
+      // NOTE: [CODENAME-446] HTTP Headers should be handled lowercase/case-insensitive
+      //
+      $headers = array_change_key_case(getallheaders(), CASE_LOWER);
+
+      if(isset($headers['x-content-type']) && $headers['x-content-type'] == 'application/vnd.core.form+json+formdata') {
         $this->addData(json_decode($_POST['json'], true) ?? []);
         $this->addData($_POST['formdata'] ?? []);
         // add files?
