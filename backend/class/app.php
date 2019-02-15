@@ -249,9 +249,9 @@ class app extends \codename\core\app {
       // get rid of the first part of the uri (e.g. host, port, etc.)
       array_shift($endpoints);
 
-      if(count($endpoints) > 3) {
-        throw new exception("CORE_REST_APP_TOO_MANY_ENDPOINT_QUALIFIERS", exception::$ERRORLEVEL_FATAL, $endpoints);
-      }
+      // if(count($endpoints) > 3) {
+      //   throw new exception("CORE_REST_APP_TOO_MANY_ENDPOINT_QUALIFIERS", exception::$ERRORLEVEL_FATAL, $endpoints);
+      // }
 
       $ret = array();
 
