@@ -101,6 +101,14 @@ abstract class restcrud extends \codename\core\context implements restContextInt
     $model->entryMake($this->getRequest()->getData());
     if(count($errors = $model->entryValidate()) === 0) {
       $model->entrySave();
+
+      if($this->getRequest()->getData($model->getPrimarykey())) {
+        // id submitted, this was an update
+        $this->getResponse()->setData('id', $this->getRequest()->getData($model->getPrimarykey()));
+      } else {
+        // new created, return last insert id
+        $this->getResponse()->setData('id', $model->lastInsertId());
+      }
     } else {
       throw new exception('EXCEPTION_RESTCRUD_VALIDATION_ERROR', exception::$ERRORLEVEL_ERROR, $errors);
     }
