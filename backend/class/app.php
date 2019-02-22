@@ -23,14 +23,14 @@ class app extends \codename\core\app {
 
       // force json request
       self::$instances['request'] = new \codename\rest\request\json();
-
-      // self-inject
-      self::injectApp(array(
-        'vendor' => 'codename',
-        'app' => 'rest',
-        'namespace' => '\\codename\\rest'
-      ));
     }
+    
+    // self-inject
+    self::injectApp(array(
+      'vendor' => 'codename',
+      'app' => 'rest',
+      'namespace' => '\\codename\\rest'
+    ));
 
     parent::__CONSTRUCT();
   }
