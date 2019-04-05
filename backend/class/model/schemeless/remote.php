@@ -23,13 +23,13 @@ abstract class remote extends \codename\core\model\schemeless\json implements \c
     $this->client = $client;
   }
 
-  /**
-   * @inheritDoc
-   */
-  protected function loadConfig(): \codename\core\config
-  {
-    return new \codename\core\config([]);
-  }
+  // /**
+  //  * @inheritDoc
+  //  */
+  // protected function loadConfig(): \codename\core\config
+  // {
+  //   return new \codename\core\config([]);
+  // }
 
   /**
    * @inheritDoc
