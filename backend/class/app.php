@@ -106,7 +106,25 @@ class app extends \codename\core\app {
    * @return bool [description]
    */
   protected static function isRestClient() : bool {
-    return (app::getRequest() instanceof \codename\core\request\cli) ? false : !(strpos($_SERVER['HTTP_ACCEPT'],'text/html') !== false);
+    if(self::$overrideIsRestClient !== null) {
+      return self::$overrideIsRestClient;
+    } else {
+      return (app::getRequest() instanceof \codename\core\request\cli) ? false : !(strpos($_SERVER['HTTP_ACCEPT'],'text/html') !== false);
+    }
+  }
+
+  /**
+   * overrides the app::isRestClient() result, if !== null
+   * @var bool
+   */
+  public static $overrideIsRestClient = null;
+
+  /**
+   * overrides the app::isRestClient() value
+   * @param bool|null   $state [true/false overrides, null resets]
+   */
+  public static function setOverrideIsRestClient(?bool $state) {
+    self::$overrideIsRestClient = $state;
   }
 
   /**
