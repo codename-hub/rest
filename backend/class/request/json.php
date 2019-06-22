@@ -1,6 +1,8 @@
 <?php
 namespace codename\rest\request;
 
+use codename\core\exception;
+
 /**
  * I handle all the data for a HTTP request with Content-Type application/json
  * @package rest
@@ -16,6 +18,22 @@ class json extends \codename\core\request implements \codename\core\request\file
       $this->datacontainer = new \codename\core\datacontainer(array());
       $this->addData($_GET ?? []);
 
+      //
+      // Temporary solution:
+      // If we're receiving a request that exceed a limit
+      // defined through server config or php config
+      // simply kill it with fire and 413.
+      //
+      if ($_SERVER['REQUEST_METHOD'] === 'POST'
+          && empty($_POST)
+          && empty($_FILES)
+          && $_SERVER['CONTENT_LENGTH'] > 0
+      ) {
+        \codename\core\app::getResponse()->setStatus(\codename\core\response::STATUS_REQUEST_SIZE_TOO_LARGE);
+        \codename\core\app::getResponse()->reset();
+        \codename\core\app::getResponse()->pushOutput();
+        exit();
+      }
 
       //
       // NOTE: [CODENAME-446] HTTP Headers should be handled lowercase/case-insensitive
