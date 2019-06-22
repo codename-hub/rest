@@ -18,22 +18,7 @@ class json extends \codename\core\request implements \codename\core\request\file
       $this->datacontainer = new \codename\core\datacontainer(array());
       $this->addData($_GET ?? []);
 
-      //
-      // Temporary solution:
-      // If we're receiving a request that exceed a limit
-      // defined through server config or php config
-      // simply kill it with fire and 413.
-      //
-      if ($_SERVER['REQUEST_METHOD'] === 'POST'
-          && empty($_POST)
-          && empty($_FILES)
-          && $_SERVER['CONTENT_LENGTH'] > 0
-      ) {
-        \codename\core\app::getResponse()->setStatus(\codename\core\response::STATUS_REQUEST_SIZE_TOO_LARGE);
-        \codename\core\app::getResponse()->reset();
-        \codename\core\app::getResponse()->pushOutput();
-        exit();
-      }
+
 
       //
       // NOTE: [CODENAME-446] HTTP Headers should be handled lowercase/case-insensitive
@@ -41,24 +26,47 @@ class json extends \codename\core\request implements \codename\core\request\file
       $headers = array_change_key_case(getallheaders(), CASE_LOWER);
 
       if(isset($headers['x-content-type']) && $headers['x-content-type'] == 'application/vnd.core.form+json+formdata') {
+        //
+        // special request content type defined by us.
+        // which allows JSON+Formdata (Object data mixed with binary uploads)
+        //
         $this->addData(json_decode($_POST['json'], true) ?? []);
         $this->addData($_POST['formdata'] ?? []);
         // add files?
         $this->files = static::normalizeFiles($_FILES)['formdata'] ?? [];
-      } else {
+      } else if(!empty($_POST) || !empty($_FILES)) {
+        //
+        // "regular" post request
+        //
         $this->files = static::normalizeFiles($_FILES) ?? [];
         $this->addData($_POST ?? []);
+      } else {
+        //
+        // pure json payload
+        //
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true);
+        $this->addData($data ?? []);
       }
 
-      // print_r($this);
-      // \codename\core\app::getResponse()->setData('dbg', [
-      //   'data' => $this->getData(),
-      //   'files' => $this->getFiles()
-      // ]);
+      //
+      // Temporary solution:
+      // If we're receiving a request that exceed a limit
+      // defined through server config or php config
+      // simply kill it with fire and 413.
+      //
+      if (($_SERVER['REQUEST_METHOD'] === 'POST')
+          && empty($_POST)
+          && empty($_FILES)
+          && empty($data)
+          && ($_SERVER['CONTENT_LENGTH'] > 0)
+      ) {
+        \codename\core\app::getResponse()->setStatus(\codename\core\response::STATUS_REQUEST_SIZE_TOO_LARGE);
+        \codename\core\app::getResponse()->reset();
+        \codename\core\app::getResponse()->pushOutput();
+        exit();
+      }
 
-      $body = file_get_contents('php://input');
-      $data = json_decode($body, true);
-      $this->addData($data ?? []);
       $this->setData('lang', $this->getData('lang') ?? "de_DE");
       return $this;
     }
