@@ -40,9 +40,17 @@ class json extends \codename\core\request implements \codename\core\request\file
         //
         $this->files = static::normalizeFiles($_FILES) ?? [];
         $this->addData($_POST ?? []);
+
+        //
+        // pure json payload parts, if possible?
+        //
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true);
+        $this->addData($data ?? []);
       } else {
         //
         // pure json payload
+        // as fallback
         //
         $body = file_get_contents('php://input');
         $data = json_decode($body, true);
