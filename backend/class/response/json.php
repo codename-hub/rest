@@ -40,7 +40,8 @@ class json extends \codename\core\response\json {
       self::STATUS_NOTFOUND => 0,
       self::STATUS_UNAUTHENTICATED => 0,
       self::STATUS_FORBIDDEN => 0,
-      self::STATUS_REQUEST_SIZE_TOO_LARGE => 0
+      self::STATUS_REQUEST_SIZE_TOO_LARGE => 0,
+      self::STATUS_BAD_REQUEST => 0,
     );
     return $translate[$this->status];
   }
