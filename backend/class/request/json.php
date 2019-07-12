@@ -66,7 +66,7 @@ class json extends \codename\core\request implements \codename\core\request\file
       if (($_SERVER['REQUEST_METHOD'] === 'POST')
           && empty($_POST)
           && empty($_FILES)
-          && empty($data)
+          && ($data === null || $data === false)
           && ($_SERVER['CONTENT_LENGTH'] > 0)
       ) {
         \codename\core\app::getResponse()->setStatus(\codename\core\response::STATUS_REQUEST_SIZE_TOO_LARGE);
