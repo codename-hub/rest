@@ -78,6 +78,9 @@ class json extends \codename\core\response\json {
   {
     $this->setStatus(self::STATUS_INTERNAL_ERROR);
 
+    // log to stderr
+    error_log(print_r($e, true), 0);
+
     if(defined('CORE_ENVIRONMENT')
       // && CORE_ENVIRONMENT != 'production'
     ) {
@@ -113,6 +116,7 @@ class json extends \codename\core\response\json {
     } else {
       // show exception ?
     }
+
 
     $this->pushOutput();
   }
