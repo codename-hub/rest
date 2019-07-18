@@ -79,6 +79,9 @@ class json extends \codename\core\response\json {
     $this->setStatus(self::STATUS_INTERNAL_ERROR);
 
     // log to stderr
+    // NOTE: we log twice, as the second one might be killed
+    // by memory exhaustion
+    error_log("[SAFE ERROR LOG] "."{$e->getMessage()} (Code: {$e->getCode()}) in File: {$e->getFile()}:{$e->getLine()}");
     error_log(print_r($e, true), 0);
 
     if(defined('CORE_ENVIRONMENT')
