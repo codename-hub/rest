@@ -81,7 +81,13 @@ class json extends \codename\core\response\json {
     // log to stderr
     // NOTE: we log twice, as the second one might be killed
     // by memory exhaustion
-    error_log("[SAFE ERROR LOG] "."{$e->getMessage()} (Code: {$e->getCode()}) in File: {$e->getFile()}:{$e->getLine()}");
+    if($e instanceof \codename\core\exception && !is_null($e->info)) {
+      $info = print_r($e->info, true);
+    } else {
+      $info = '<none>';
+    }
+
+    error_log("[SAFE ERROR LOG] "."{$e->getMessage()} (Code: {$e->getCode()}) in File: {$e->getFile()}:{$e->getLine()}, Info: {$info}");
     error_log(print_r($e, true), 0);
 
     if(defined('CORE_ENVIRONMENT')
