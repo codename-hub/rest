@@ -117,7 +117,7 @@ class json extends \codename\core\response\json {
 
       $this->errorstack->addError($e->getMessage(), $e->getCode(), array(
         'info' => $info,
-        'trace' => $e->getTrace()
+        'trace' => !($e instanceof \codename\core\sensitiveException) ? $e->getTrace() : null
       ));
       $this->pushOutput();
 
