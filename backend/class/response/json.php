@@ -160,8 +160,13 @@ class json extends \codename\core\response\json {
       ];
       if($jsonLastError === JSON_ERROR_UTF8) {
         $errorResponse['erroneous_data'] = self::utf8ize($this->getData());
+      } else if($jsonLastError === JSON_ERROR_UNSUPPORTED_TYPE) {
+        $errorResponse = $response; // simply provide the response data again and try via partial output
+        $errorResponse['partial_output'] = true;
       }
-      $json = json_encode($errorResponse);
+
+      // enable partial output to overcome recursions and some type errors
+      $json = json_encode($errorResponse, JSON_PARTIAL_OUTPUT_ON_ERROR);
     }
 
     print_r($json);
