@@ -109,7 +109,11 @@ class app extends \codename\core\app {
     if(self::$overrideIsRestClient !== null) {
       return self::$overrideIsRestClient;
     } else {
-      return (app::getRequest() instanceof \codename\core\request\cli) ? false : !(strpos($_SERVER['HTTP_ACCEPT'],'text/html') !== false);
+      //
+      // NOTE: possible bad request behaviour with unknown accept-header which causes a text-exception to occur -> FE output
+      // It is also possible we need to check for lowercase header (http_accept) due to HTTP2 specification
+      //
+      return (app::getRequest() instanceof \codename\core\request\cli) ? false : !(strpos($_SERVER['HTTP_ACCEPT'] ?? '','text/html') !== false);
     }
   }
 
