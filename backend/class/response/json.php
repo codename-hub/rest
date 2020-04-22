@@ -88,7 +88,7 @@ class json extends \codename\core\response\json {
     }
 
     error_log("[SAFE ERROR LOG] "."{$e->getMessage()} (Code: {$e->getCode()}) in File: {$e->getFile()}:{$e->getLine()}, Info: {$info}");
-    error_log(print_r($e, true), 0);
+    // error_log(print_r($e, true), 0);
 
     if(defined('CORE_ENVIRONMENT')
       // && CORE_ENVIRONMENT != 'production'
