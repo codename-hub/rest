@@ -55,6 +55,16 @@ abstract class restApiContext extends context implements customContextInterface{
 
         $instance = new $class($endpointConfig);
         if($instance instanceof \codename\rest\context\restApiContext\apiEndpoint) {
+          if(!$instance->isPublic()) {
+            if(!app::getAuth()->isAuthenticated()) {
+              $this->getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+              return;
+            }
+            if(!$instance->isAllowed()) {
+              $this->getResponse()->setStatus(\codename\core\response::STATUS_FORBIDDEN);
+              return;
+            }
+          }
           $instance->run();
           return;
         }
