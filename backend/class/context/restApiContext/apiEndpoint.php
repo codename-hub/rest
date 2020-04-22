@@ -1,6 +1,7 @@
 <?php
 namespace codename\rest\context\restApiContext;
 
+use codename\core\app;
 use codename\core\bootstrapInstance;
 
 /**
@@ -28,4 +29,25 @@ abstract class apiEndpoint extends bootstrapInstance
    * @return void
    */
   public abstract function run();
+
+  /**
+   * [isPublic description]
+   * @return bool [description]
+   */
+  public abstract function isPublic () : bool;
+
+  /**
+   *
+   * {@inheritDoc}
+   * @see \codename\core\cache_interface::get($group, $key)
+   */
+  public function isAllowed() : bool {
+      $identity = app::getSession()->identify();
+
+      if(!$identity) {
+          return false;
+      }
+
+      return $identity;
+  }
 }
