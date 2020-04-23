@@ -7,7 +7,7 @@ use codename\core\bootstrapInstance;
 /**
  * [abstract description]
  */
-abstract class apiEndpoint extends bootstrapInstance
+abstract class apiEndpoint extends bootstrapInstance implements \codename\rest\context\restContextInterface
 {
   /**
    * [protected description]
@@ -28,7 +28,75 @@ abstract class apiEndpoint extends bootstrapInstance
    * [public description]
    * @return void
    */
-  public abstract function run();
+  public function run() {
+    $httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
+    $method = "method_{$httpMethod}";
+    $this->$method();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_get()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_head()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_post()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_put()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_delete()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_options()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_trace()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function method_patch()
+  {
+    throw new \LogicException('Not implemented'); // TODO
+  }
 
   /**
    * [isPublic description]
