@@ -44,7 +44,8 @@ abstract class restApiContext extends context implements customContextInterface{
         $lookup .= '_'.$endpoint;
 
         try {
-          $class = app::getInheritedClass('context_'.$lookup);
+          // $class = app::getInheritedClass('context_'.$lookup);
+          $class = $this->getApiEndpointClass('context_'.$lookup);
         } catch (\Exception $e) {
           continue;
         }
@@ -72,5 +73,28 @@ abstract class restApiContext extends context implements customContextInterface{
     }
 
     throw new exception('EXCEPTION_RESTAPICONTEXT_INVALID_ENTRY_POINT', exception::$ERRORLEVEL_FATAL);
+  }
+
+  /**
+   * [getApiEndpointClass description]
+   * @param  string $classname [description]
+   * @return string            [description]
+   */
+  protected function getApiEndpointClass(string $classname) : string {
+    $classname = str_replace('_', '\\', $classname);
+    $file = str_replace('\\', '/', $classname);
+    foreach(app::getAppstack() as $parentapp) {
+      // do not traverse, check for current app
+      if($parentapp['app'] == app::getApp()) {
+        $filename = CORE_VENDORDIR . $parentapp['vendor'] . '/' . $parentapp['app'] . '/backend/class/' . $file . '.php';
+        if(app::getInstance('filesystem_local')->fileAvailable($filename)) {
+            $namespace = $parentapp['namespace'] ?? '\\' . $parentapp['vendor'] . '\\' . $parentapp['app'];
+            return $namespace . '\\' . $classname;
+        }
+      } else {
+        continue;
+      }
+    }
+    throw new exception('EXCEPTION_RESTAPICONTEXT_INVALID_ENDPOINT', exception::$ERRORLEVEL_FATAL);
   }
 }
