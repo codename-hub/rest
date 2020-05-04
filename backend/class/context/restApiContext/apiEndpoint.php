@@ -79,7 +79,17 @@ abstract class apiEndpoint extends bootstrapInstance implements \codename\rest\c
    */
   public function method_options()
   {
-    throw new \LogicException('Not implemented'); // TODO
+    if(count($headers = $this->getAllowedHeaders()) > 0) {
+      $this->getResponse()->setHeader('Access-Control-Allow-Headers: '.implode(', ', $headers));
+    }
+  }
+
+  /**
+   * [getAllowedHeaders description]
+   * @return array [description]
+   */
+  protected function getAllowedHeaders () : array {
+    return [];
   }
 
   /**

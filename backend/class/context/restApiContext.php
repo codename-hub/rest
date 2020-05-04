@@ -8,7 +8,7 @@ use codename\core\context\customContextInterface;
 
 use codename\core\exception;
 
-abstract class restApiContext extends context implements customContextInterface{
+abstract class restApiContext extends context implements customContextInterface {
   /**
    *
    */
@@ -56,6 +56,10 @@ abstract class restApiContext extends context implements customContextInterface{
 
         $instance = new $class($endpointConfig);
         if($instance instanceof \codename\rest\context\restApiContext\apiEndpoint) {
+          if(strtolower($_SERVER['REQUEST_METHOD'] ?? '') === 'options') {
+            $instance->method_options();
+            return;
+          }
           if(!$instance->isPublic()) {
             if(!app::getAuth()->isAuthenticated()) {
               $this->getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
