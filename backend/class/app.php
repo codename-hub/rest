@@ -53,10 +53,14 @@ class app extends \codename\core\app {
    */
   protected function mainRun()
   {
-    $this->doAction()->doView();
-    // HTTP API Endpoint-specific method running
-    if(self::isRestClient()) {
-      $this->doMethod();
+    if($this->getContext() instanceof \codename\core\context\customContextInterface) {
+      $this->doContextRun();
+    } else {
+      $this->doAction()->doView();
+      // HTTP API Endpoint-specific method running
+      if(self::isRestClient()) {
+        $this->doMethod();
+      }
     }
     $this->doShow()->doOutput();
   }
@@ -158,7 +162,11 @@ class app extends \codename\core\app {
 
     }
 
-    $isPublic = self::getConfig()->get("context>{$this->getRequest()->getData('context')}>view>{$this->getRequest()->getData('view')}>public") === true;
+    if($this->getContext() instanceof \codename\core\context\customContextInterface) {
+      $isPublic = $this->getContext()->isPublic();
+    } else {
+      $isPublic = self::getConfig()->get("context>{$this->getRequest()->getData('context')}>view>{$this->getRequest()->getData('view')}>public") === true;
+    }
 
     $isAuthenticated = null;
     if(!$isPublic) {
