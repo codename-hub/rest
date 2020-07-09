@@ -40,8 +40,14 @@ abstract class restApiContext extends context implements customContextInterface 
       $lookup = $entryPoint;
       $endpointComponents = [];
 
-      while($endpoint = array_shift($endpoints)) {
-        $lookup .= '_'.$endpoint;
+      do {
+
+        $lookup = $entryPoint . '_' . implode('_', $endpoints);
+
+        // $this->getResponse()->setData('api_debug', array_merge(
+        //   $this->getResponse()->getData('api_debug') ?? [],
+        //   [ $lookup ]
+        // ));
 
         try {
           // $class = app::getInheritedClass('context_'.$lookup);
@@ -73,7 +79,7 @@ abstract class restApiContext extends context implements customContextInterface 
           $instance->run();
           return;
         }
-      }
+      } while($endpoints = array_slice($endpoints, 0, -1));
     }
 
     throw new exception('EXCEPTION_RESTAPICONTEXT_INVALID_ENTRY_POINT', exception::$ERRORLEVEL_FATAL);
