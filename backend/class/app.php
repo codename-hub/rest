@@ -174,6 +174,7 @@ class app extends \codename\core\app {
       if(!$this->authenticate()) {
         // authentication_error
         self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+        self::getResponse()->setData('dbg_rest::handleAccess_1', true);
         $isAuthenticated = false;
       } else {
         $isAuthenticated = true;
@@ -194,6 +195,7 @@ class app extends \codename\core\app {
           // ]);
         } else {
           self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+          self::getResponse()->setData('dbg_rest::handleAccess_2', true);
         }
 
         self::getResponse()->pushOutput();
@@ -204,6 +206,7 @@ class app extends \codename\core\app {
       if(!$isPublic) {
         if(!$isAuthenticated) {
           self::getResponse()->setStatus(\codename\core\response::STATUS_UNAUTHENTICATED);
+          self::getResponse()->setData('dbg_rest::handleAccess_3', true);
           self::getResponse()->pushOutput();
           exit();
         }
