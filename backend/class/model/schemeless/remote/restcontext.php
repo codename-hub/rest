@@ -23,6 +23,14 @@ abstract class restcontext extends \codename\rest\model\schemeless\remote {
           $params['filter'][$f->field->get()] = $f->value;
         } else if($f->operator === 'LIKE') {
           $params['filter_like'][$f->field->get()] = $f->value;
+        } else if($f->operator === '<=') {
+          $params['filter_lte'][$f->field->get()] = $f->value;
+        } else if($f->operator === '<') {
+          $params['filter_lt'][$f->field->get()] = $f->value;
+        } else if($f->operator === '>') {
+          $params['filter_gt'][$f->field->get()] = $f->value;
+        } else if($f->operator === '>=') {
+          $params['filter_gte'][$f->field->get()] = $f->value;
         }
       }
     }
