@@ -104,6 +104,8 @@ abstract class rest extends \codename\core\api\rest {
         $this->credential = $this->createAuthenticationCredential($data);
         $this->serviceprovider = $this->createServiceProvider($data);
 
+        $this->setHeader('Accept', 'application/json');
+
         return $this;
     }
 
