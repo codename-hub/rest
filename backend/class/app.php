@@ -24,7 +24,7 @@ class app extends \codename\core\app {
       // force json request
       self::$instances['request'] = new \codename\rest\request\json();
     }
-    
+
     // self-inject
     self::injectApp(array(
       'vendor' => 'codename',
@@ -40,7 +40,7 @@ class app extends \codename\core\app {
    */
   public function run()
   {
-    if(self::isRestClient()) {
+    if(static::isRestClient()) {
       $qualifier = self::getEndpointQualifier();
       $this->getRequest()->addData($qualifier);
     }
@@ -70,7 +70,7 @@ class app extends \codename\core\app {
    */
   protected function doShow(): \codename\core\app
   {
-    if(self::isRestClient()) {
+    if(static::isRestClient() || ($this->getResponse() instanceof \codename\core\response\json)) {
       // rest client output does NOT provide "show"
       return $this;
     } else {
@@ -107,9 +107,9 @@ class app extends \codename\core\app {
 
   /**
    * returns true, if client is requesting via REST protocol (e.g. no HTML output)
-   * @return bool [description]
+   * @return bool|null
    */
-  protected static function isRestClient() : bool {
+  protected static function isRestClient() : ?bool {
     if(self::$overrideIsRestClient !== null) {
       return self::$overrideIsRestClient;
     } else {
@@ -117,7 +117,27 @@ class app extends \codename\core\app {
       // NOTE: possible bad request behaviour with unknown accept-header which causes a text-exception to occur -> FE output
       // It is also possible we need to check for lowercase header (http_accept) due to HTTP2 specification
       //
-      return (app::getRequest() instanceof \codename\core\request\cli) ? false : !(strpos($_SERVER['HTTP_ACCEPT'] ?? '','text/html') !== false);
+
+      if(app::getRequest() instanceof \codename\core\request\cli) {
+        // Definitely a CLI client
+        return false;
+      }
+      if(strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false) {
+        // Prefer JSON response, we assume a REST Client
+        return true;
+      }
+      if(strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== false) {
+        // No explicit JSON requested, but includes text/html - assume regular browser
+        return false;
+      }
+
+      if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        // OPTIONS request (typical for XHRs, so assume a REST Client)
+        return true;
+      }
+
+      // Unknown state, falsy
+      return null;
     }
   }
 
@@ -133,6 +153,17 @@ class app extends \codename\core\app {
    */
   public static function setOverrideIsRestClient(?bool $state) {
     self::$overrideIsRestClient = $state;
+  }
+
+  /**
+   * Replaces the response object
+   * to be used for facade emulation
+   *
+   * @param  \codename\core\response    $response [description]
+   * @return \codename\core\response              [description]
+   */
+  public static function setResponse(\codename\core\response $response) : \codename\core\response {
+    return self::$instances['response'] = $response;
   }
 
   /**
