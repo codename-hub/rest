@@ -35,6 +35,19 @@ abstract class restcontext extends \codename\rest\model\schemeless\remote {
       }
     }
 
+    if(count($this->order) > 0) {
+      foreach($this->order as $o) {
+        $params['order'][] = [
+          'field'     => $o->field->get(),
+          'direction' => $o->direction
+        ];
+      }
+    }
+
+    if($this->limit->limit ?? false) {
+      $params['options']['limit'] = $this->limit->limit;
+    }
+
     $result = $this->client->get($this->config->get('endpoint>query'), $params);
 
     if($result['success']) {
