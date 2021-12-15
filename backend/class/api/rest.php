@@ -259,7 +259,7 @@ abstract class rest extends \codename\core\api\rest {
      * Adds another key to the data array of this instance.
      * <br />Will check for the forbiddenpostfields here and do nothing if the field's $name is forbidden
      * @param string $name
-     * @param multitype $value
+     * @param mixed|null $value
      * @return void
      */
     public function addData(string $name, $value) {
