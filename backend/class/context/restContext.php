@@ -1,95 +1,101 @@
 <?php
+
 namespace codename\rest\context;
 
 use codename\core\context;
+use codename\core\exception;
+use codename\rest\response\json;
+use LogicException;
 
 /**
  * abstract REST-Context
- * just provides a function-based access to override HTTP-Method Responses
+ * just provides function-based access to override HTTP-Method Responses
  */
 abstract class restContext extends context implements restContextInterface
 {
-  /**
-   *
-   */
-  public function __construct()
-  {
-    // reset response data
-    // this is a data-only context
-    if($this->getResponse() instanceof \codename\rest\response\json) {
-      $this->getResponse()->reset();
+    /**
+     * @throws exception
+     */
+    public function __construct()
+    {
+        // reset response data
+        // this is a data-only context
+        $response = $this->getResponse();
+        if ($response instanceof json) {
+            $response->reset();
+        }
     }
-  }
 
-  /**
-   * [view_default description]
-   * @return [type] [description]
-   */
-  public function view_default () {
-    // empty
-  }
+    /**
+     * [view_default description]
+     * @return void [type] [description]
+     */
+    public function view_default(): void
+    {
+        // empty
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_get()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_get(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_head()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_head(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_post()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_post(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_put()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_put(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_delete()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_delete(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_trace()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_trace(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_options()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_options(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function method_patch()
-  {
-    throw new \LogicException('Not implemented'); // TODO
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function method_patch(): void
+    {
+        throw new LogicException('Not implemented'); // TODO
+    }
 }

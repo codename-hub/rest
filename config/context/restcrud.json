@@ -1,12 +1,12 @@
 {
-  "defaultview" : "default",
-  "view" : {
-    "default" : {}
+  "defaultview": "default",
+  "view": {
+    "default": {}
   },
-  "method" : {
-    "get" : {},
-    "put" : {},
-    "post" : {},
-    "patch" : {}
+  "method": {
+    "get": {},
+    "put": {},
+    "post": {},
+    "patch": {}
   }
 }
