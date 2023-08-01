@@ -1,21 +1,40 @@
 {
-    "name": "codename/rest",
-    "description": "This library supplies the core parts for constructing an API-only endpoint-calling-style app",
-    "type": "project",
-    "keywords": [ "api", "codename", "core", "framework", "rest", "endpoint" ],
-    "authors": [
-        {
-            "name": "Kevin Dargel",
-            "role": "Software Developer"
-        }
-    ],
-    "require" : {
-      "codename/core" : "*",
-      "codename/core-ui" : "*"
-    },
-    "autoload": {
-      "psr-4": {
-          "codename\\rest\\": "backend/class/"
-      }
+  "name": "codename/rest",
+  "description": "This library supplies the core parts for constructing an API-only endpoint-calling-style app",
+  "type": "project",
+  "keywords": [
+    "api",
+    "codename",
+    "core",
+    "framework",
+    "rest",
+    "endpoint"
+  ],
+  "authors": [
+    {
+      "name": "Kevin Dargel",
+      "role": "Software Developer"
     }
+  ],
+  "require": {
+    "codename/core": "*",
+    "codename/core-ui": "*",
+    "php": "^8.1"
+  },
+  "require-dev": {
+    "codename/core-test": "*",
+    "friendsofphp/php-cs-fixer": "^3.15",
+    "phpunit/phpunit": "^10.0",
+    "vimeo/psalm": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "codename\\rest\\": "backend/class/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "codename\\rest\\tests\\": "tests/"
+    }
+  }
 }

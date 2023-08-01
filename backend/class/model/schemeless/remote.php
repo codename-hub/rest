@@ -1,82 +1,30 @@
 <?php
+
 namespace codename\rest\model\schemeless;
-use \codename\core\model;
-use \codename\core\app;
-use codename\core\exception;
+
+use codename\core\model\modelInterface;
+use codename\core\model\schemeless\json;
+use codename\rest\api\rest;
 
 /**
  * model for performing/wrapping remote api queries
  */
-abstract class remote extends \codename\core\model\schemeless\json implements \codename\core\model\modelInterface {
+abstract class remote extends json implements modelInterface
+{
 
-  /**
-   * [protected description]
-   * @var \codename\rest\api\rest
-   */
-  protected $client = null;
+    /**
+     * [protected description]
+     * @var rest
+     */
+    protected rest $client;
 
-  /**
-   * [setRestClient description]
-   * @param \codename\rest\api\rest $client [description]
-   */
-  protected function setRestClient(\codename\rest\api\rest $client) {
-    $this->client = $client;
-  }
-
-  // /**
-  //  * @inheritDoc
-  //  */
-  // protected function loadConfig(): \codename\core\config
-  // {
-  //   return new \codename\core\config([]);
-  // }
-
-  /**
-   * @inheritDoc
-   */
-  private function obsoleteInternalQuery(string $query, array $params = array())
-  {
-    $params = [];
-
-    if(count($this->filter) > 0) {
-      //
-      // RestCrud-Style
-      //
-      // foreach($this->filter as $f) {
-      //   $params['filter'][] = [
-      //     'field' => $f->field->get(),
-      //     'value' => $f->value,
-      //     'operator' => $f->operator,
-      //   ];
-      // }
-
-      //
-      // RestContext filter/filter_like style
-      //
-      foreach($this->filter as $f) {
-        if($f->operator === '=') {
-          $params['filter'][$f->field->get()] = $f->value;
-        } else if($f->operator === 'LIKE') {
-          $params['filter_like'][$f->field->get()] = $f->value;
-        } else if($f->operator === '<=') {
-          $params['filter_lte'][$f->field->get()] = $f->value;
-        } else if($f->operator === '<') {
-          $params['filter_lt'][$f->field->get()] = $f->value;
-        } else if($f->operator === '>') {
-          $params['filter_gt'][$f->field->get()] = $f->value;
-        } else if($f->operator === '>=') {
-          $params['filter_gte'][$f->field->get()] = $f->value;
-        }
-      }
+    /**
+     * [setRestClient description]
+     * @param rest $client [description]
+     */
+    protected function setRestClient(rest $client): void
+    {
+        $this->client = $client;
     }
-
-    $result = $this->client->get($this->config->get('endpoint>query'), $params);
-
-    if($result['success']) {
-      return $result['data'][$result['data']['data_key'] ?? 'data'];
-    } else {
-      throw new exception('EXCEPTION_MODEL_REMOTERESTAPIMODEL_UNSUCCESSFUL', exception::$ERRORLEVEL_ERROR);
-    }
-  }
 
 }
