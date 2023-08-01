@@ -1,32 +1,41 @@
 <?php
+
 namespace codename\rest\api\rest;
 
-use \codename\core\app;
+use codename\core\credential;
+use codename\core\exception;
+use codename\rest\api\rest;
+use ReflectionException;
 
 /**
  * Accesstoken-Authentication-based
  * REST Client
  */
-abstract class accesstoken extends \codename\rest\api\rest {
+abstract class accesstoken extends rest
+{
 
-  /**
-   * @inheritDoc
-   */
-  protected function createAuthenticationCredential(array $data): \codename\core\credential {
-    return new \codename\rest\credential\accesstoken($data);
-  }
+    /**
+     * {@inheritDoc}
+     * @param array $data
+     * @return credential
+     * @throws ReflectionException
+     * @throws exception
+     */
+    protected function createAuthenticationCredential(array $data): credential
+    {
+        return new \codename\rest\credential\accesstoken($data);
+    }
 
-  /**
-   * @inheritDoc
-   */
-  protected function getAuthenticationHeaders(): array
-  {
-    return [
-      'X-Accesskey' => $this->credential->getIdentifier(),
-      'X-Token'     => $this->credential->getAuthentication()
-    ];
-  }
-
+    /**
+     * {@inheritDoc}
+     */
+    protected function getAuthenticationHeaders(): array
+    {
+        return [
+          'X-Accesskey' => $this->credential->getIdentifier(),
+          'X-Token' => $this->credential->getAuthentication(),
+        ];
+    }
 
 
 }

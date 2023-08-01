@@ -1,57 +1,59 @@
 <?php
+
 namespace codename\rest\context;
 
 /**
- * Defines a HTTP Endpoint based on the REST Specification
+ * Defines an HTTP Endpoint based on the REST Specification
  */
-interface restContextInterface {
+interface restContextInterface
+{
 
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
-  // https://de.wikipedia.org/wiki/Representational_State_Transfer
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+    // https://de.wikipedia.org/wiki/Representational_State_Transfer
 
-  /**
-   * GET
-   */
-  public function method_get();
+    /**
+     * GET
+     */
+    public function method_get(): void;
 
-  /**
-   * HEAD
-   */
-  public function method_head();
+    /**
+     * HEAD
+     */
+    public function method_head(): void;
 
-  /**
-   * POST
-   */
-  public function method_post();
+    /**
+     * POST
+     */
+    public function method_post(): void;
 
-  /**
-   * PUT
-   */
-  public function method_put();
+    /**
+     * PUT
+     */
+    public function method_put(): void;
 
-  /**
-   * DELETE
-   */
-  public function method_delete();
+    /**
+     * DELETE
+     */
+    public function method_delete(): void;
 
-  /**
-   * CONNTEXT
-   */
-  // public function method_connect();
+    /**
+     * CONTEXT
+     */
+    // public function method_connect(): void;
 
-  /**
-   * OPTIONS
-   */
-  public function method_options();
+    /**
+     * OPTIONS
+     */
+    public function method_options(): void;
 
-  /**
-   * TRACE
-   */
-  public function method_trace();
+    /**
+     * TRACE
+     */
+    public function method_trace(): void;
 
-  /**
-   * PATCH
-   */
-  public function method_patch();
+    /**
+     * PATCH
+     */
+    public function method_patch(): void;
 
 }
